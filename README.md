@@ -1,0 +1,75 @@
+# Watch Me Go
+
+"Oi can you watch me go program" is something I heard rather rarely
+but I created a watcher anyway.
+
+Watchmego checks a directory for any changes in go files and runs a make
+command called "watch".
+
+## Installation
+
+Make sure you added your GOPATH to PATH otherwise you won't be able to
+run it globally.
+
+```bash
+# Clone the repository
+git clone https://github.com/thejezzi/watchmego.git
+
+# cd into the directory and run go install
+cd watchmego && go install
+
+```
+
+## Usage
+
+```bash
+# To get help run it with the -h flag
+wmg -h
+
+#      &*(&   (&#**********#&(    &&&     
+#      %&&&****/&#*********%&/***&(&&&    
+#    & #&.       &*&*****&*&..      &.%/  
+#   & &.          ,*&***&*,           & % 
+#   &..    &&%     &&&(&#&.    (&&      & 
+#   & %.          **&%#&&/.           & & 
+#    &&&..       &#%/,,,,&/&.        & &  
+#     %&/**//**&&***(,%****/&(//#%/*(&/   
+#     /*******************************%   
+#     ***************,,,**************&   
+#     **********............**********&   
+#     ********................********&   
+#     *******.................********&   
+#     /*****,..................*******&   
+#   
+# Usage: wmg [flags][directory]
+# Flags:
+#   -h, --help		Print this help message
+#   -v, --version		Print version information
+#   -c, --check		Check makefile for compatibility
+#   -C, --create		Create makefile for directory
+#   -d, --debug		Print debug information
+
+# watchmego will use the current directory if none is specified
+# note that the directory is the only argument every other option
+# is specified by flags
+
+wmg ./subdir
+
+# You can also log all debug messages if you ever have any trouble
+wmg -d ./subdir
+
+# If you have no makefile in the directory, create it by using the 
+# capital -C or --create flag
+wmg -C ./subdir
+
+# If you want to check if your makefile is compatible use the
+# lowercase -c
+wmg -c ./subdir
+  
+# [ERROR] Makefile not found
+# Create Makefile? (y/n): y
+# Makefile created
+# [INFO] Please edit your makefile and add a watch target.
+# [INFO] Exiting ...
+
+```
