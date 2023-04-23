@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"wmg/lib/checker"
 	"wmg/lib/cli"
@@ -10,12 +11,16 @@ import (
 	"wmg/lib/util"
 )
 
+// Gets set by the build script
+var version string
+
 func main() {
-  logger.PrintGopher()
 
   args := cli.ParseArgs(os.Args[1:])
 
   switch {
+  case args.Version:
+    fmt.Println("wmg " + version)
   case args.Check:
     if checker.CheckMakefile(args.Dir) {
       logger.Info("Makefile found")
@@ -41,6 +46,7 @@ func main() {
       gen.CreateMakeFile(args.Dir)
     }
   default:
+    logger.PrintGopher()
     commands.Watch(&args)
   }
 

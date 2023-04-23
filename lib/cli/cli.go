@@ -57,11 +57,6 @@ func ParseArgs(args []string) Args {
     logger.Debug("Debug mode enabled")
   }
 
-  if version {
-    fmt.Println("wmg v0.1.0")
-    os.Exit(0)
-  }
-
   if len(flag.Args()) == 0 {
     dir = "."
   } else {

@@ -8,6 +8,7 @@ import (
 	"wmg/lib/logger"
 )
 
+
 func RunMakeWatch(args *cli.Args) {
 
   logger.Info("Running make watch")

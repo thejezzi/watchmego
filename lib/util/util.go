@@ -25,3 +25,24 @@ func AskYesNoQuestion(prompt string) bool {
     }
   }
 }
+
+func ReadMakeFileVar(identifier string) string {
+  file, err := os.Open("Makefile")
+  if err != nil {
+    fmt.Println(err)
+  }
+  defer file.Close()
+
+  scanner := bufio.NewScanner(file)
+  for scanner.Scan() {
+    line := scanner.Text()
+    if strings.Contains(line, identifier) {
+      return strings.Split(line, "=")[1]
+    }
+  }
+
+  if err := scanner.Err(); err != nil {
+    fmt.Println(err)
+  }
+  return ""
+}

@@ -16,7 +16,7 @@ func CreateMakeFile(path string) {
     os.Exit(1)
   }
 
-  makefileContent := []byte("watch:\n\tgo build -o output .\n\t./output\n")
+  makefileContent := []byte("WATCHMEGO := ./output\n\nwatch:\n\tgo build -o output .\n")
 
   err := os.WriteFile(absPath, makefileContent, 0644)
   if err != nil {
