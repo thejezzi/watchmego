@@ -104,7 +104,7 @@ func (W *Watcher) Watch() {
         fmt.Println()
       }
       // Rerun makescript if file is modified in any way
-      if filepath.Ext(event.Name) == ".go" && (event.Has(fsnotify.Chmod)) {
+      if filepath.Ext(event.Name) == ".go" && (event.Has(fsnotify.Chmod) || event.Has(fsnotify.Write)) {
         logger.Info("File modified: " + event.Name + ", rerunning makescript")
 
         stop <- true
