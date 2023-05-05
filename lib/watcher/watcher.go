@@ -19,6 +19,7 @@ type Watcher struct {
   Watcher *fsnotify.Watcher
   Args cli.Args
   Callbacks []func(*cli.Args, *chan bool)
+  alreadyRunning bool
 }
 
 func New(args cli.Args) *Watcher {
@@ -104,7 +105,8 @@ func (W *Watcher) Watch() {
         fmt.Println()
       }
       // Rerun makescript if file is modified in any way
-      if filepath.Ext(event.Name) == ".go" && (event.Has(fsnotify.Chmod) || event.Has(fsnotify.Write)) {
+      if !W.alreadyRunning && filepath.Ext(event.Name) == ".go" && (event.Has(fsnotify.Chmod) || event.Has(fsnotify.Write)) {
+        W.alreadyRunning = true
         logger.Info("File modified: " + event.Name + ", rerunning makescript")
 
         stop <- true
@@ -115,10 +117,11 @@ func (W *Watcher) Watch() {
           go runEmpty(&stop, &W.Args)
           continue
         }
-
+        
         go runServer(&stop, &W.Args)
 
-
+      } else {
+        W.alreadyRunning = false
       }
 
       // Remove and re-add file to watcher because iotify doesn't work properly
