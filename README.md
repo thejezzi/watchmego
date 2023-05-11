@@ -16,7 +16,7 @@ run it globally.
 git clone https://github.com/thejezzi/watchmego.git
 
 # cd into the directory and run go install
-cd watchmego && go install
+cd watchmego && make install
 
 ```
 
@@ -72,4 +72,18 @@ wmg -c ./subdir
 # [INFO] Please edit your makefile and add a watch target.
 # [INFO] Exiting ...
 
+```
+
+## Makefile
+
+```makefile
+# Binary or command you want to run
+WATCHMEGO=./runme
+
+# You can use multiple commands too
+WATCHMEGO=./runme ; ./andme ; ./ormeandthiscmdnexttome ; ls
+
+# define a target called watch which will be called as a prebuild task
+watch:
+        @echo "I am running first :P"
 ```

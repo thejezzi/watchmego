@@ -181,40 +181,83 @@ func (W *Watcher) runBuildStep() error {
 func runServer(stop *chan bool, args *cli.Args) {
 	// Get the run command from makefile
 	runCommand := util.ReadMakeFileVar("WATCHMEGO")
-	logger.Info("Running command: '" + runCommand + "' (from Makefile)")
-	if runCommand == "" {
+	allCommands := strings.Split(runCommand, ";")
+
+	var allCommandHandles []*exec.Cmd
+
+	if allCommands[0] == "" {
 		logger.Error("No run command found in Makefile. Consider defining WATCHMEGO in your Makefile")
 		// os.Exit(1)
 	}
 
-	// Run the command
-	cmd := exec.Command(strings.TrimSpace(runCommand))
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-
-	err := cmd.Start()
-	if err != nil {
-		logger.Error("Error running command")
-		if args.Debug {
-			logger.Debug(err.Error())
+	for _, command := range allCommands {
+		if command == "" {
+			continue
 		}
+		logger.Info("Running command: '" + command + "' (from Makefile)")
+		// Get first word of command
+		commandParts := strings.Split(strings.TrimSpace(command), " ")
+		commandName := commandParts[0]
+		commandRest := strings.Join(commandParts[1:], " ")
+		logger.Debug(commandName + " " + commandRest)
+		cmd := exec.Command(commandName, util.ParseArguments(commandRest)...)
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		err := cmd.Start()
+		if err != nil {
+			logger.Error("Error running command")
+			if args.Debug {
+				logger.Debug(err.Error())
+			}
+		}
+		allCommandHandles = append(allCommandHandles, cmd)
 	}
+
+	// Run the command
+	// cmd := exec.Command(strings.TrimSpace(runCommand))
+	// cmd.Stdout = os.Stdout
+	// cmd.Stderr = os.Stderr
+	//
+	// err := cmd.Start()
+	// if err != nil {
+	// 	logger.Error("Error running command")
+	// 	if args.Debug {
+	// 		logger.Debug(err.Error())
+	// 	}
+	// }
 
 	<-*stop
 
-	// Kill the process
-	err = cmd.Process.Kill()
-	if err != nil {
-		if args.Debug {
-			logger.Error("Error killing process")
-			logger.Debug(err.Error())
-		}
-	}
+	// // Kill the process
+	// err = cmd.Process.Kill()
+	// if err != nil {
+	// 	if args.Debug {
+	// 		logger.Error("Error killing process")
+	// 		logger.Debug(err.Error())
+	// 	}
+	// }
+	//
+	// // Wait for the process to finish
+	// err = cmd.Wait()
+	// if err != nil && args.Debug {
+	// 	logger.Debug("Process killed")
+	// }
 
-	// Wait for the process to finish
-	err = cmd.Wait()
-	if err != nil && args.Debug {
-		logger.Debug("Process killed")
+	for _, cmd := range allCommandHandles {
+		// Kill the process
+		err := cmd.Process.Kill()
+		if err != nil {
+			if args.Debug {
+				logger.Error("Error killing process")
+				logger.Debug(err.Error())
+			}
+		}
+
+		// Wait for the process to finish
+		err = cmd.Wait()
+		if err != nil && args.Debug {
+			logger.Debug("Process killed")
+		}
 	}
 
 }
