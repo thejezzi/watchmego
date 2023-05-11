@@ -1,4 +1,4 @@
-module wmg
+module github.com/thejezzi/watchmego
 
 go 1.20
 

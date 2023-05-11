@@ -1,21 +1,21 @@
 package commands
 
 import (
+	"github.com/thejezzi/watchmego/lib/cli"
+	"github.com/thejezzi/watchmego/lib/logger"
+	"github.com/thejezzi/watchmego/lib/watcher"
 	"os"
-	"wmg/lib/cli"
-	"wmg/lib/logger"
-	"wmg/lib/watcher"
 )
 
 func Watch(args *cli.Args) {
-  w := watcher.New(*args) 
-  // Dont forget to close the watcher
-  defer w.Close()
-  
-  go w.Watch()
+	w := watcher.New(*args)
+	// Dont forget to close the watcher
+	defer w.Close()
 
-  <-make(chan struct{})
+	go w.Watch()
 
-  logger.Info("Exiting...")
-  os.Exit(0)
+	<-make(chan struct{})
+
+	logger.Info("Exiting...")
+	os.Exit(0)
 }
