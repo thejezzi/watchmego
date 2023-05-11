@@ -199,7 +199,6 @@ func runServer(stop *chan bool, args *cli.Args) {
 		commandParts := strings.Split(strings.TrimSpace(command), " ")
 		commandName := commandParts[0]
 		commandRest := strings.Join(commandParts[1:], " ")
-		logger.Debug(commandName + " " + commandRest)
 		cmd := exec.Command(commandName, util.ParseArguments(commandRest)...)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
