@@ -79,6 +79,10 @@ func (W *Watcher) Watch() {
 
 	// Run the build step
 	initial_err := W.runBuildStep()
+
+	// Run once command potentially endlessly
+	go runOnce(&W.Args)
+
 	stop := make(chan bool)
 
 	if initial_err != nil {
@@ -176,6 +180,40 @@ func (W *Watcher) runBuildStep() error {
 
 	return nil
 
+}
+
+func runOnce(args *cli.Args) {
+	// Create signal which never ends
+	infinity := make(chan bool)
+
+	once := util.ReadMakeFileVar("WATCHMEGO_ONCE")
+
+	if once == "" {
+		return
+	}
+
+	logger.Info("Running command: '" + once + "' once (from Makefile)")
+
+	commandParts := strings.Split(strings.TrimSpace(once), " ")
+	commandName := commandParts[0]
+	commandRest := strings.Join(commandParts[1:], " ")
+	cmd := exec.Command(commandName, util.ParseArguments(commandRest)...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err := cmd.Start()
+	if err != nil {
+		logger.Error("Error running command")
+		if args.Debug {
+			logger.Debug(err.Error())
+		}
+	}
+
+	for {
+		select {
+		case <-infinity:
+			os.Exit(0)
+		}
+	}
 }
 
 func runServer(stop *chan bool, args *cli.Args) {
