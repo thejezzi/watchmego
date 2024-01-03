@@ -12,8 +12,7 @@ import (
 	"github.com/thejezzi/watchmego/lib/util"
 )
 
-// Gets set by the build script
-const version string = "0.0.0"
+const version string = "0.0.1"
 
 func main() {
 	args := cli.ParseArgs(os.Args[1:])
