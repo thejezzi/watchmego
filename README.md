@@ -3,7 +3,7 @@
 # Watch Me Go
 
 Watchmego checks a directory for any changes in go files and runs a make
-command called "watch".
+command.
 
 ## Installation
 
@@ -11,19 +11,14 @@ Make sure you added your GOPATH to PATH otherwise you won't be able to
 run it globally.
 
 ```bash
-# Clone the repository
-git clone https://github.com/thejezzi/watchmego.git
-
-# cd into the directory and run go install
-cd watchmego && make install
-
+go install github.com/thejezzi/watchmego@latest
 ```
 
 ## Usage
 
 ```bash
 # To get help run it with the -h flag
-wmg -h
+watchmego -h
 
 #      &*(&   (&#**********#&(    &&&
 #      %&&&****/&#*********%&/***&(&&&
@@ -40,7 +35,7 @@ wmg -h
 #     *******.................********&
 #     /*****,..................*******&
 #
-# Usage: wmg [flags][directory]
+# Usage: watchmego [flags][directory]
 # Flags:
 #   -h, --help		Print this help message
 #   -v, --version		Print version information
@@ -52,18 +47,18 @@ wmg -h
 # note that the directory is the only argument every other option
 # is specified by flags
 
-wmg ./subdir
+watchmego ./subdir
 
 # You can also log all debug messages if you ever have any trouble
-wmg -d ./subdir
+watchmego -d ./subdir
 
 # If you have no makefile in the directory, create it by using the
 # capital -C or --create flag
-wmg -C ./subdir
+watchmego -C ./subdir
 
 # If you want to check if your makefile is compatible use the
 # lowercase -c
-wmg -c ./subdir
+watchmego -c ./subdir
 
 # [ERROR] Makefile not found
 # Create Makefile? (y/n): y
@@ -83,6 +78,11 @@ WATCHMEGO=./runme
 WATCHMEGO=./runme ; ./andme ; ./ormeandthiscmdnexttome ; ls
 
 # define a target called watch which will be called as a prebuild task
-watch:
+watch-build:
         @echo "I am running first :P"
+
+# this directive will be generated when you use the cli to create your Makefile
+# and is used for a more convenient way of calling watchmego
+watch: watch-build
+    @watchmego .
 ```
