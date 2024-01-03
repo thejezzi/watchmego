@@ -2,9 +2,10 @@ package checker
 
 import (
 	"bufio"
-	"github.com/thejezzi/watchmego/lib/logger"
 	"os"
 	"strings"
+
+	"github.com/thejezzi/watchmego/lib/logger"
 )
 
 // check if makefile exists for specified directory
@@ -23,7 +24,7 @@ func CheckMakefileWatch(dir string) bool {
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		if strings.Contains(scanner.Text(), "watch:") {
+		if strings.Contains(scanner.Text(), "watch-build:") {
 			return true
 		}
 	}
