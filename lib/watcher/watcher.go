@@ -76,7 +76,6 @@ func (W *Watcher) Close() {
 }
 
 func (W *Watcher) Watch() {
-
 	// Run the build step
 	initial_err := W.runBuildStep()
 
@@ -150,13 +149,11 @@ func (W *Watcher) Watch() {
 			logger.Error("Error: " + err.Error())
 			// Stop the watcher
 		}
-
 	}
 }
 
 func (W *Watcher) runBuildStep() error {
-
-	cmd := exec.Command("make", "watch")
+	cmd := exec.Command("make", "watch-build")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Start()
@@ -179,7 +176,6 @@ func (W *Watcher) runBuildStep() error {
 	}
 
 	return nil
-
 }
 
 func runOnce(args *cli.Args) {
@@ -296,7 +292,6 @@ func runServer(stop *chan bool, args *cli.Args) {
 			logger.Debug("Process killed")
 		}
 	}
-
 }
 
 func runEmpty(stop *chan bool, args *cli.Args) {
